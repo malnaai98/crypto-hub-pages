@@ -1,7 +1,8 @@
 name: Pages Build & Deploy (cron)
+
 on:
-  schedule: [ { cron: "*/10 * * * *" } ]
-  workflow_dispatch:
+  schedule: [ { cron: '*/10 * * * *' } ]   # every 10 minutes
+  workflow_dispatch:                       # allow manual runs
 
 permissions:
   contents: read
@@ -18,12 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with:
+          node-version: 20
       - name: Build site & feed
         run: node tools/ingest.mjs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-        with: { path: dist }
+        with:
+          path: dist
 
   deploy:
     needs: build
