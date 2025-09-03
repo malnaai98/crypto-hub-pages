@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crypto News Hub — Free (Pages)</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;">
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <div style="height:2rem;width:2rem;border-radius:.75rem;background:linear-gradient(135deg,var(--accent),var(--accent2))"></div>
+        <div style="font-weight:600">Crypto News Hub — Free (Pages)</div>
+      </div>
+      <button id="modeBtn" class="badge">Light mode</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="grid" id="main">
+      <section class="grid" id="news">
+        <article class="card">
+          <div style="display:flex;justify-content:space-between;gap:.75rem">
+            <h2 style="margin:.25rem 0;font-size:1.125rem">ETF deadline moved up for Issuer Y</h2>
+            <div class="impact" style="color:var(--accent)">Impact 4/5</div>
+          </div>
+          <div class="muted">2m ago</div>
+          <ul style="margin-top:.5rem;padding-left:1.25rem">
+            <li>SEC calendar update cited</li>
+            <li>Issuer Y spokesman declined comment</li>
+          </ul>
+          <div class="tags">
+            <span class="badge">ETF</span><span class="badge">Regulatory</span><span class="badge">Trading catalyst</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div style="display:flex;justify-content:space-between;gap:.75rem">
+            <h2 style="margin:.25rem 0;font-size:1.125rem">Bridge X exploit: ~$42M moved to mixer</h2>
+            <div class="impact" style="color:var(--danger)">Impact 5/5</div>
+          </div>
+          <div class="muted">6m ago</div>
+          <ul style="margin-top:.5rem;padding-left:1.25rem">
+            <li>PeckShield traces primary address</li>
+            <li>Exchanges notified for freeze</li>
+          </ul>
+          <div class="tags">
+            <span class="badge">Hack</span><span class="badge">Security</span><span class="badge">On-chain</span>
+          </div>
+        </article>
+      </section>
+
+      <aside class="grid">
+        <section class="card">
+          <div style="font-weight:600;margin-bottom:.5rem">Market snapshot</div>
+          <ul class="grid" style="gap:.5rem">
+            <li class="row"><span>BTC/USDT</span><span>$58,200 <span class="down">-0.8%</span></span></li>
+            <li class="row"><span>ETH/USDT</span><span>$2,420 <span class="up">+1.2%</span></span></li>
+            <li class="row"><span>SOL/USDT</span><span>$92.5 <span class="up">+0.4%</span></span></li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:600">Whale radar</div>
+            <div id="fresh" class="muted">—</div>
+          </div>
+          <ul id="whaleList" class="grid" style="margin-top:.75rem"></ul>
+        </section>
+      </aside>
+    </main>
+    <footer>© <span id="year"></span> Sage | Works — GitHub Pages free pack</footer>
+  </div>
+  <script src="./app.js"></script>
+</body>
+</html>
