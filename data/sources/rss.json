@@ -1,0 +1,9 @@
+{
+  "feeds": [
+    "https://www.federalreserve.gov/feeds/press_all.xml",
+    "https://www.sec.gov/news/pressreleases.rss",
+    "https://blog.coinbase.com/feed",
+    "https://www.kraken.com/learn/rss.xml",
+    "https://www.binance.com/en/blog/rss"
+  ]
+}
