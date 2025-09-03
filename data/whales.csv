@@ -1,0 +1,4 @@
+chain,hash,from,to,tokenSymbol,counterparty,notes
+eth,0xabc...123,Binance Hot Wallet,Unknown,ETH,Binance,"whale transfer spotted; link-only mode"
+arb,0xdef...456,Kraken,Unknown,USDT,Kraken,"possible OTC refill"
+bsc,0xghi...789,OKX,Unknown,BNB,OKX,"large hot wallet move"
