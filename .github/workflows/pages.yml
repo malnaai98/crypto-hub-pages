@@ -1,8 +1,8 @@
 name: Pages Build & Deploy (cron)
 
 on:
-  schedule: [ { cron: '*/10 * * * *' } ]   # every 10 minutes
-  workflow_dispatch:                       # allow manual runs
+  schedule: [ { cron: '*/10 * * * *' } ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,12 +17,59 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Build site & feed
-        run: node tools/ingest.mjs
+      - name: Generate site & feed
+        run: |
+          mkdir -p dist
+          cat > dist/index.html <<'HTML'
+          <!doctype html><html lang="en"><head>
+            <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <title>Crypto Hub — Free</title>
+            <style>body{font-family:Inter,system-ui;color:#e6ebf0;background:#0b0f14;margin:0}
+            .wrap{max-width:80rem;margin:0 auto;padding:1rem}.card{background:#101826;border:1px solid #1e2a38;border-radius:12px;padding:16px;margin-top:16px}
+            .row{display:flex;justify-content:space-between;align-items:flex-start}.muted{color:#8aa2b2;font-size:12px}.badge{border:1px solid #1e2a38;padding:2px 8px;border-radius:6px;font-size:12px}
+            a{color:inherit;text-decoration:underline}</style>
+          </head><body>
+            <div class="wrap">
+              <div class="row"><h2>Whale radar</h2><div id="fresh" class="muted">—</div></div>
+              <div id="list"></div>
+            </div>
+            <script>
+              async function load(){
+                try{
+                  const r=await fetch('./feed.json',{cache:'no-store'}),j=await r.json();
+                  const ts=j.updatedAt?Math.floor((Date.now()-j.updatedAt)/1000):null;
+                  document.getElementById('fresh').textContent=ts==null?'—':('Updated '+ts+'s ago');
+                  const list=document.getElementById('list'); list.innerHTML='';
+                  (j.items||[]).forEach(w=>{
+                    const tx=w.whale||{},chain=(tx.chain||'eth').toLowerCase();
+                    const base=chain==='arb'?'https://arbiscan.io/tx/':chain==='bsc'?'https://bscscan.com/tx/':'https://etherscan.io/tx/';
+                    const url=tx.hash?base+tx.hash:null;
+                    const div=document.createElement('div'); div.className='card';
+                    div.innerHTML='<div class="row"><div><div style="font-weight:600">'+(tx.tokenSymbol||'Asset')+
+                      ' · '+(tx.amountDecimal||'')+(tx.amountUsd?(' · $'+Number(tx.amountUsd).toLocaleString()):'')+
+                      '</div><div class="muted">'+(tx.counterparty?tx.counterparty+' · ':'')+chain.toUpperCase()+
+                      (tx.percentCirc!=null?(' · '+tx.percentCirc.toFixed(2)+'% circ'):'')+
+                      '</div>'+(url?('<a href="'+url+'" target="_blank" rel="noreferrer">View on explorer ↗</a>'):'')+
+                      '</div><div class="badge">'+(tx.hash||'').slice(0,10)+'…</div></div>';
+                    list.appendChild(div);
+                  });
+                }catch(e){ document.getElementById('fresh').textContent='feed missing'; }
+              }
+              load(); setInterval(load,10000);
+            </script>
+          </body></html>
+          HTML
+          cat > dist/feed.json <<'JSON'
+          {
+            "items": [
+              { "id":"w:demo1","kind":"WHALE","whale":{"chain":"eth","hash":"0xabc123...dead","tokenSymbol":"ETH","amountDecimal":1500,"amountUsd":3600000,"percentCirc":0.00075,"counterparty":"Binance Hot Wallet"} },
+              { "id":"w:demo2","kind":"WHALE","whale":{"chain":"arb","hash":"0xdef456...babe","tokenSymbol":"USDT","amountDecimal":20000000,"amountUsd":20000000,"percentCirc":0.010,"counterparty":"Kraken"} },
+              { "id":"w:demo3","kind":"WHALE","whale":{"chain":"bsc","hash":"0xghi789...cafe","tokenSymbol":"BNB","amountDecimal":50000,"amountUsd":12000000,"percentCirc":0.003,"counterparty":"OKX"} }
+            ],
+            "updatedAt": 0
+          }
+          JSON
+          echo "Site generated into dist/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
